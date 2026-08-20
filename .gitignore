@@ -1,0 +1,88 @@
+# ========================
+# Environment & Secrets
+# ========================
+.env
+.env.local
+.env.*.local
+
+# ========================
+# Python
+# ========================
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ========================
+# Django
+# ========================
+db.sqlite3
+db.sqlite3-journal
+*.log
+media/
+staticfiles/
+static_collected/
+
+# ========================
+# Node.js / Next.js
+# ========================
+node_modules/
+.next/
+out/
+.turbo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+package-lock.json
+
+# ========================
+# Testing & Coverage
+# ========================
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+
+# ========================
+# IDE & Editors
+# ========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+*~
+
+# ========================
+# OS Files
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ========================
+# Docker
+# ========================
+.docker/
+
+# ========================
+# Misc
+# ========================
+*.bak
+*.tmp
+*.temp
