@@ -1,0 +1,10 @@
+django
+groq
+python-dotenv
+celery
+redis
+numpy
+pandas
+scikit-learn
+django-cors-headers
+channels
