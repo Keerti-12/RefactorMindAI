@@ -1,4 +1,4 @@
-package main.java.com.refactormind; // Correct package definition
+package com.refactormind;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
