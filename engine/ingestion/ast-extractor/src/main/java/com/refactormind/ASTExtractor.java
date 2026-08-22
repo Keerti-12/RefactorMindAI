@@ -46,8 +46,8 @@ public class ASTExtractor {
 
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.err.println("Error: No file path provided."); // Use err to avoid breaking Python JSON parser
-            System.exit(1); // Exit code 1 tells Python the subprocess failed
+            System.err.println("Error: No file path provided.");
+            System.exit(1);
         }
 
         try {
