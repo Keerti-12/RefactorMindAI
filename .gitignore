@@ -68,10 +68,11 @@ coverage.xml
 *~
 
 # ========================
-# Java Binary Extractor
+# Java Binary Extractor & External Tools
 # ========================
 **/target/
 **/ASTExtractor.jar
+tools/
 
 # ========================
 # OS Files
