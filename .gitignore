@@ -68,6 +68,12 @@ coverage.xml
 *~
 
 # ========================
+# Java Binary Extractor
+# ========================
+**/target/
+**/ASTExtractor.jar
+
+# ========================
 # OS Files
 # ========================
 .DS_Store
