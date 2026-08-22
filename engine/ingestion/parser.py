@@ -23,5 +23,5 @@ def parse_java_file(file_path: str) -> dict:
     return json_output
 
 if __name__ == '__main__':
-    response = parse_java_file('../../tests/sample_java/OrderProcessor.java')
+    response = parse_java_file('tests/sample_java/OrderProcessor.java')
     print(response)
