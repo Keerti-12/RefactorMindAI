@@ -37,10 +37,12 @@ public class ASTExtractor {
     static class MethodData {
         String methodName;
         String returnType;
+        String methodBody;
 
-        public MethodData(String methodName, String returnType) {
+        public MethodData(String methodName, String returnType, String methodBody) {
             this.methodName = methodName;
             this.returnType = returnType;
+            this.methodBody = methodBody;
         }
     }
 
@@ -68,8 +70,9 @@ public class ASTExtractor {
                 for (MethodDeclaration method : c.findAll(MethodDeclaration.class)) {
                     String name = method.getNameAsString();
                     String type = method.getTypeAsString();
+                    String body = method.getBody().isPresent() ? method.getBody().get().toString() : "";
 
-                    classData.methods.add(new MethodData(name, type));
+                    classData.methods.add(new MethodData(name, type, body));
                 }
 
                 projectClasses.add(classData);
