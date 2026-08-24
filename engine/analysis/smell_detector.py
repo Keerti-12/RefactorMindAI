@@ -54,8 +54,8 @@ def analyze_semantic_smells(ast_dict: dict) -> dict:
         return parsed_json
 
     except json.JSONDecodeError as e:
-        logger.err("Failed to Parse LLM ouput. The LLM hallucinated converstation text. Error: {e}")
-        logger.err(f"Raw result: {raw_result}")
+        logger.error(f"Failed to Parse LLM ouput. The LLM hallucinated converstation text. Error: {e}")
+        logger.error(f"Raw result: {raw_result}")
         raise RuntimeError("LLM didn't returned the valid json")
 
 
