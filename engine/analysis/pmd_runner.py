@@ -14,14 +14,21 @@ def run_pmd(target_path: str) -> dict:
         pmd_exe,
         "check",
         "-d", target_path,
-        "-R", "category/java/errorprone.xml, category/java/bestpractices.xml",
+        "-R", "category/java/errorprone.xml,category/java/bestpractices.xml",
         "-f", "json"
     ]
 
     logger.info(f"Executing PMD on {target_path}")
 
     try:
+        # check=False is intentional: PMD exits with code 4 when violations are found.
         result = subprocess.run(command, capture_output=True, text=True, check=False)
+
+        # Code 0 = no violations, 4 = violations found, anything else = real error.
+        if result.returncode not in (0, 4):
+            logger.error(f"PMD failed with unexpected exit code {result.returncode}")
+            logger.error(result.stderr)
+            raise RuntimeError("PMD execution failed")
 
         pmd_report = json.loads(result.stdout)
 
