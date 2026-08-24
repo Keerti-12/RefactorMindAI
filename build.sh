@@ -8,7 +8,7 @@ mvn clean package
 echo "======================Built Java binary successfully!===================="
 
 echo "=====================Moving ASTExtractor.jar to ingestion directory===================="
-cp target/*-jar-with-dependencies.jar ../ASTExtractor.jar
+cp target/ast-extractor-1.0-SNAPSHOT-jar-with-dependencies.jar ../ASTExtractor.jar
 echo "======================Moved ASTExtractor.jar to ingestion directory===================="
 
 cd ../../../
