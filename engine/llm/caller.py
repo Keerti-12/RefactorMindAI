@@ -8,11 +8,13 @@ load_dotenv()
 
 api_key = os.getenv("GROQ_API_KEY")
 primary_model = os.getenv("MODEL")
-fallback_model = os.getenv("FALLBACK_MODEL")
+fallback_model = os.getenv("FALLBACK_MODEL")    
+
+if not api_key:
+    raise RuntimeError("Groq_API_KEY not found in environment. Did you added the API in .env?")
 
 client = Groq(api_key=api_key)
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 def call_llm(prompt: str, context: str = "") -> str:
@@ -42,7 +44,7 @@ def call_llm(prompt: str, context: str = "") -> str:
             result = response.choices[0].message.content
             result = re.sub(r'<think>.*?</think>\n*', '', result, flags=re.DOTALL)
             result = result.strip()
-            logger.info(f"LLM call successful - model: {model},"f"character retruned: {len(result)}")
+            logger.info(f"LLM call successful - model: {model}, character retruned: {len(result)}")
 
             return result
 
@@ -55,5 +57,6 @@ def call_llm(prompt: str, context: str = "") -> str:
     )
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
     response = call_llm("Say hello and confirm you are ready to help with java refactoring.")
     print(f'\n{response}\n')
