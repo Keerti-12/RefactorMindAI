@@ -5,6 +5,8 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.body.VariableDeclarator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -36,11 +38,16 @@ public class ASTExtractor {
 
     static class MethodData {
         String methodName;
+        int methodBeginLine;
+        List<String> methodParameter = new ArrayList<>();
         String returnType;
         String methodBody;
 
-        public MethodData(String methodName, String returnType, String methodBody) {
+        public MethodData(String methodName, int methodBeginLine, List<String> methodParameter, String returnType,
+                String methodBody) {
             this.methodName = methodName;
+            this.methodBeginLine = methodBeginLine;
+            this.methodParameter = methodParameter;
             this.returnType = returnType;
             this.methodBody = methodBody;
         }
@@ -61,18 +68,27 @@ public class ASTExtractor {
                 ClassData classData = new ClassData(c.getNameAsString());
 
                 for (FieldDeclaration field : c.findAll(FieldDeclaration.class)) {
-                    String name = field.getVariables().get(0).getNameAsString();
-                    String type = field.getElementType().asString();
-
-                    classData.fields.add(new FieldData(name, type));
+                    for (VariableDeclarator var : field.getVariables()) {
+                        String name = var.getNameAsString();
+                        String type = field.getElementType().asString();
+                        classData.fields.add(new FieldData(name, type));
+                    }
                 }
 
                 for (MethodDeclaration method : c.findAll(MethodDeclaration.class)) {
                     String name = method.getNameAsString();
                     String type = method.getTypeAsString();
                     String body = method.getBody().isPresent() ? method.getBody().get().toString() : "";
+                    int line = method.getBegin().get().line;
+                    List<String> params = new ArrayList<>();
 
-                    classData.methods.add(new MethodData(name, type, body));
+                    for (Parameter p : method.getParameters()) {
+                        String parameterType = p.getTypeAsString();
+                        String parameterName = p.getNameAsString();
+                        params.add(parameterType + " " + parameterName);
+                    }
+
+                    classData.methods.add(new MethodData(name, line, params, type, body));
                 }
 
                 projectClasses.add(classData);
