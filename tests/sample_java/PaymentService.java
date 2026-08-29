@@ -1,11 +1,13 @@
 package sample_java;
 
+import inventory.InventoryService;
 import sample_java.Customer;
 
 public class PaymentService {
 
     // CROSS-FILE DEPENDS_ON: field type is Customer, defined in Customer.java
     private Customer customer;
+    private InventoryService inventoryService;
     private DatabaseConnection db = new DatabaseConnection();
 
     public PaymentService(Customer customer) {
@@ -26,6 +28,7 @@ public class PaymentService {
 
         double totalAmount = amount + fee;
 
+        inventoryService.reserveStock((int) amount);
         try {
             db.saveOrder("PAY-" + customer.getCustomerId(), totalAmount);
             return true;

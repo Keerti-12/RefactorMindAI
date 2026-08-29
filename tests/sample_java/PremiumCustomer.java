@@ -1,6 +1,6 @@
 package sample_java;
 
-public class PremiumCustomer {
+public class PremiumCustomer extends Customer {
 
     private double creditLimit;
 
