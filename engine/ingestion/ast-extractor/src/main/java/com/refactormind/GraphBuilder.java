@@ -9,6 +9,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -112,6 +113,44 @@ class GraphBuilder {
             }
         }
 
+        for (ConstructorDeclaration constructor : c.findAll(ConstructorDeclaration.class)) {
+            String constructorName = constructor.getNameAsString();
+
+            List<String> paramTypes = new ArrayList<>();
+            for (Parameter params : constructor.getParameters()) {
+                paramTypes.add(params.getTypeAsString());
+            }
+
+            String constructorId = className + "." + constructorName + "(" + String.join(",", paramTypes) + ")";
+            int constructorLine = constructor.getBegin().map(p -> p.line).orElse(0);
+
+            graph.addNode(new Node(constructorId, "CONSTRUCTOR", constructorName, fileName, constructorLine));
+
+            graph.addEdge(new Edge(className, constructorId, "CONTAINS"));
+
+            constructor.findAll(MethodCallExpr.class).forEach(call -> {
+                String calledMethod = call.getNameAsString();
+
+                call.getScope().ifPresent(scope -> {
+                    String scopeName = scope.toString();
+                    String targetClass = fieldTypes.getOrDefault(scopeName, null);
+
+                    String argSuffix;
+
+                    if (call.getArguments().isEmpty()) {
+                        argSuffix = "()";
+                    } else {
+                        argSuffix = "";
+                    }
+
+                    if (targetClass != null && typeMap.containsKey(targetClass)) {
+                        String targetMethodId = targetClass + "." + calledMethod + argSuffix;
+                        graph.addEdge(new Edge(constructorId, targetMethodId, "CALLS"));
+                    }
+                });
+            });
+        }
+
         for (MethodDeclaration method : c.findAll(MethodDeclaration.class)) {
             String methodName = method.getNameAsString();
 
@@ -130,13 +169,20 @@ class GraphBuilder {
             method.findAll(MethodCallExpr.class).forEach(call -> {
                 String calledMethod = call.getNameAsString();
 
+                String argSuffix;
+                if (call.getArguments().isEmpty()) {
+                    argSuffix = "()";
+                } else {
+                    argSuffix = "";
+                }
+
                 call.getScope().ifPresent(scope -> {
                     String scopeName = scope.toString();
 
                     String targetClass = fieldTypes.getOrDefault(scopeName, null);
 
                     if (targetClass != null && typeMap.containsKey(targetClass)) {
-                        String targetMethodId = targetClass + "." + calledMethod;
+                        String targetMethodId = targetClass + "." + calledMethod + argSuffix;
                         graph.addEdge(new Edge(methodId, targetMethodId, "CALLS"));
                     }
                 });
