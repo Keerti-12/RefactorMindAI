@@ -201,13 +201,28 @@ class GraphBuilder {
             String classId = className;
             int classLine = c.getBegin().map(p -> p.line).orElse(0);
 
-            graph.addNode(new Node(classId, "CLASS", className, fileName, classLine));
+            String nodeType = c.isInterface() ? "INTERFACE" : "CLASS";
+            graph.addNode(new Node(classId, nodeType, className, fileName, classLine));
 
             graph.addEdge(new Edge(fileId, classId, "CONTAINS"));
 
             processFields(c, className, fileName, graph, typeMap);
 
             processMethods(c, className, fileName, graph, typeMap);
+
+            c.getExtendedTypes().forEach(parent -> {
+                String parentName = parent.getNameAsString();
+                if (typeMap.containsKey(parentName)) {
+                    graph.addEdge(new Edge(className, parentName, "EXTENDS"));
+                }
+            });
+
+            c.getImplementedTypes().forEach(iFace -> {
+                String iFaceName = iFace.getNameAsString();
+                if (typeMap.containsKey(iFaceName)) {
+                    graph.addEdge(new Edge(className, iFaceName, "IMPLEMENTS"));
+                }
+            });
         }
 
         cu.findAll(ImportDeclaration.class).forEach(imp -> {
