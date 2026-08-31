@@ -29,5 +29,5 @@ def build_graph(dir_path: str) -> dict:
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format ="%(asctime)s - %(levelname)s - %(message)s")
-    graph = build_graph('tests/sample_java')
+    graph = build_graph('tests')
     print(json.dumps(graph, indent=2))
