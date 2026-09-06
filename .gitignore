@@ -24,8 +24,8 @@ pip-delete-this-directory.txt
 # ========================
 # Django
 # ========================
-db.sqlite3
-db.sqlite3-journal
+*.sqlite3
+dev_db.sqlite3-journal
 *.log
 media/
 staticfiles/
